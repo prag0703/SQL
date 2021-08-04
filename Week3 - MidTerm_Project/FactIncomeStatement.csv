@@ -1,0 +1,41 @@
+ISKey,AccountName,AccountType,DateKey,Amount
+IS01,Advertising,Revenue,d365,500000
+IS02,Service,Revenue,d365,50000
+IS03,Cost of Revenue,Cost,d365,10000
+IS04,Sales and marketing,Cost,d365,300000
+IS05,Product development,Cost,d365,15000
+IS06,General and addministrative,Cost,d365,8000
+IS07,Depreciation and amartization,Cost,d365,5000
+IS08,Net Income (2015),Profit,d365,212000
+IS09,Advertising,Revenue,d731,1470000
+IS10,Service,Revenue,d731,147000
+IS11,Cost of Revenue,Cost,d731,200640
+IS12,Sales and marketing,Cost,d731,320000
+IS13,Product development,Cost,d731,17000
+IS14,General and addministrative,Cost,d731,12000
+IS15,Depreciation and amartization,Cost,d731,7000
+IS16,Net Income (2016),Profit,d731,1060360
+IS17,Advertising,Revenue,d1096,2735000
+IS18,Service,Revenue,d1096,273500
+IS19,Cost of Revenue,Cost,d1096,400050
+IS20,Sales and marketing,Cost,d1096,350000
+IS21,Product development,Cost,d1096,18000
+IS22,General and addministrative,Cost,d1096,15000
+IS23,Depreciation and amartization,Cost,d1096,8000
+IS24,Net Income (2017),Profit,d1096,2217450
+IS25,Advertising,Revenue,d1461,4310000
+IS26,Service,Revenue,d1461,431000
+IS27,Cost of Revenue,Cost,d1461,450000
+IS28,Sales and marketing,Cost,d1461,380000
+IS29,Product development,Cost,d1461,19000
+IS30,General and addministrative,Cost,d1461,18000
+IS31,Depreciation and amartization,Cost,d1461,9000
+IS32,Net Income (2018),Profit,d1461,3865000
+IS33,Advertising,Revenue,d1826,8000000
+IS34,Service,Revenue,d1826,800000
+IS35,Cost of Revenue,Cost,d1826,340000
+IS36,Sales and marketing,Cost,d1826,400000
+IS37,Product development,Cost,d1826,20000
+IS38,General and addministrative,Cost,d1826,19000
+IS39,Depreciation and amartization,Cost,d1826,10000
+IS40,Net Income (2019),Profit,d1826,8011000
