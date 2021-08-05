@@ -1,2 +1,2 @@
 $ cat .gitattributes
-*.* linguist-language=matlab
+*.* linguist-language=SQL
