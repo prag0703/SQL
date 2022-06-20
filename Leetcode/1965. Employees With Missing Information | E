@@ -1,0 +1,53 @@
+1965. Employees With Missing Information
+Easy
+
+Write an SQL query to report the IDs of all the employees with missing information. The information of an employee is missing if:
+
+The employee's name is missing, or
+The employee's salary is missing.
+Return the result table ordered by employee_id in ascending order.
+
+Input: 
+Employees table:
++-------------+----------+
+| employee_id | name     |
++-------------+----------+
+| 2           | Crew     |
+| 4           | Haven    |
+| 5           | Kristian |
++-------------+----------+
+Salaries table:
++-------------+--------+
+| employee_id | salary |
++-------------+--------+
+| 5           | 76071  |
+| 1           | 22517  |
+| 4           | 63539  |
++-------------+--------+
+Output: 
++-------------+
+| employee_id |
++-------------+
+| 1           |
+| 2           |
++-------------+
+
+# Write your MySQL query statement below
+WITH emp_n_s AS
+(
+SELECT 
+    e.employee_id AS employee_id
+FROM Employees e
+LEFT join salaries s ON e.employee_id = s.employee_id
+WHERE s.salary IS NULL OR e.name IS NULL
+UNION 
+SELECT 
+    s.employee_id AS employee_id
+FROM Employees e
+RIGHT JOIN salaries s ON e.employee_id = s.employee_id
+WHERE s.salary IS NULL OR e.name IS NULL
+)
+SELECT 
+    * 
+FROM emp_n_s
+ORDER BY employee_id ASC
