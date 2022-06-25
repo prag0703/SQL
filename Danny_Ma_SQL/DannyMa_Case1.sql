@@ -235,7 +235,7 @@ WHERE order_date < '2021-01-31'
 GROUP BY 1
 
 
--- Bonus Question
+-- --------------------------------------------------------------- Bonus Question -----------------------------------------------------------------
 -- Join All The Things
 -- Recreate the table with: customer_id, order_date, product_name, price, member (Y/N)
 -- customer_id	| order_date	| product_name |	price	| member
