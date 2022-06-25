@@ -213,7 +213,7 @@ GROUP BY 1;
 WITH join_week AS
 (
 SELECT 
-	s.customer_id,
+    s.customer_id,
     s.order_date,
     me.product_name,
     me.price,
@@ -224,13 +224,68 @@ LEFT JOIN members m ON m.customer_id = s.customer_id
 JOIN menu me ON me.product_id = s.product_id
 )
 SELECT 
-	customer_id,
+    customer_id,
     GROUP_CONCAT(product_name) AS ordered_items,
     SUM(CASE 
-		WHEN order_date <= join_date and order_date >= week_after_join THEN 2*(price)
-        ELSE price
+	   WHEN order_date <= join_date and order_date >= week_after_join THEN 2*(price)
+	   ELSE price
 	END) AS points 
 FROM join_week
 WHERE order_date < '2021-01-31'
 GROUP BY 1
 
+
+-- Bonus Question
+-- Join All The Things
+-- Recreate the table with: customer_id, order_date, product_name, price, member (Y/N)
+-- customer_id	| order_date	| product_name |	price	| member
+-- A	2021-01-01	curry	15	N
+
+SELECT 
+    s.customer_id,
+    s.order_date,
+    m.product_name,
+    m.price,
+    CASE 
+        WHEN s.order_date < me.join_date THEN 'N'
+        WHEN s.order_Date >= me.join_date THEN 'Y'
+        ELSE 'N'
+     END AS "member"
+FROM Sales s
+LEFT JOIN Members me ON me.customer_id = s.customer_id
+LEFT JOIN menu m ON m.product_id = s.product_id;
+
+
+-- Extension: Rank All The Things
+-- Danny also requires further information about the ranking of customer products, 
+-- but he purposely does not need the ranking for non-member purchases so he expects 
+-- null ranking values for the records when customers are not yet part of the loyalty program.
+
+WITH basic_data_table AS
+(
+SELECT 
+    s.customer_id,
+    s.order_date,
+    m.product_name,
+    m.price,
+    CASE 
+	WHEN s.order_date < me.join_date THEN 'N'
+        WHEN s.order_Date >= me.join_date THEN 'Y'
+        ELSE 'N'
+     END AS "member"
+FROM Sales s
+LEFT JOIN Members me ON me.customer_id = s.customer_id
+LEFT JOIN menu m ON m.product_id = s.product_id
+)
+SELECT 
+	*,
+    	CASE 
+	     WHEN member = 'Y' THEN RANK() OVER(partition by customer_id, member ORDER BY order_date) 
+	     WHEN member = 'N' THEN NULL
+	END AS ranking
+FROM basic_data_table
+ORDER BY customer_id, order_Date ASC ;
+
+-- ----------------------------------------------------------------------------------------------
+-- Solution with explanation: 
+-- https://medium.com/analytics-vidhya/8-week-sql-challenge-case-study-week-1-dannys-diner-2ba026c897ab#id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6IjJiMDllNzQ0ZDU4Yzk5NTVkNGYyNDBiNmE5MmY3YjM3ZmVhZDJmZjgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJuYmYiOjE2NTYxNzI3NTksImF1ZCI6IjIxNjI5NjAzNTgzNC1rMWs2cWUwNjBzMnRwMmEyamFtNGxqZGNtczAwc3R0Zy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjExNzMxOTcxMTc1MDEwODg2OTM4MSIsImVtYWlsIjoicHJhZ2F0aWRvYmFyaXlhMTBAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjIxNjI5NjAzNTgzNC1rMWs2cWUwNjBzMnRwMmEyamFtNGxqZGNtczAwc3R0Zy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsIm5hbWUiOiJQcmFnYXRpIEtvbGFkaXlhIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hLS9BT2gxNEdnTWFJbUdjOGR0dk1vRE5FWFIwblJIdVBuUmFzRVFOS2RsLTFRU096az1zOTYtYyIsImdpdmVuX25hbWUiOiJQcmFnYXRpIiwiZmFtaWx5X25hbWUiOiJLb2xhZGl5YSIsImlhdCI6MTY1NjE3MzA1OSwiZXhwIjoxNjU2MTc2NjU5LCJqdGkiOiJlMzhjYjU5MWZjMmZkN2NlOGNkMmM5YzNlY2NhMTJlZmFkMTQ4ZDdiIn0.Gr5NpKxw2D3gsn4REwrOuA3vSJg1TlreA79KdF405zNd1MHHQ9MK9gY0MK8bxdf4XlrY89KklDNw1xo2Ut-MQZO9mzmsXFEPpD_x5Oe0NZlCTtciAk6UuQXlk1vseXfWNaOda4OrxwOtIoNKnUErfD-w6ssaCixbxlrrt61lNavznKWlwyBTeftLweeCWP2k7QMeM5c081c9rUgTJiVLPD7j06yWiAEEQXxQa3yq-i_Tl96DUTCjIQtK622mrYu3SnF2bSow6y0GbjqCCeOaZhJds7otsrsjFRJBKiKtUvIlb-XJAjYfxnUUruVMBcOpkptZbVlHvGaUSxovtkJk9g
