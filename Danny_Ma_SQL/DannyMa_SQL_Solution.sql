@@ -167,3 +167,70 @@ INNER JOIN menu m
 WHERE rank_item = 1
 GROUP BY f.customer_id, f.order_date, m.product_name
 ORDER BY f.customer_id;
+
+-- 7. Which item was purchased just before the customer became a member?
+
+SELECT 
+    s.customer_id,
+    s.order_date,
+    GROUP_CONCAT(me.product_name)
+FROM Sales s
+LEFT JOIN members m ON m.customer_id = s.customer_id
+JOIN menu me ON me.product_id = s.product_id
+WHERE s.order_date < m.join_date 
+GROUP BY 1,2
+ORDER BY 1 asc;
+
+-- 8. What is the total items and amount spent for each member before they became a member?
+SELECT 
+    s.customer_id,
+    s.order_date,
+    GROUP_CONCAT(me.product_name) AS list_of_items,
+    COUNT(s.product_id) as total_items,
+    SUM(me.price) AS amount
+FROM Sales s
+LEFT JOIN members m ON m.customer_id = s.customer_id
+JOIN menu me ON me.product_id = s.product_id
+WHERE s.order_date < m.join_date 
+GROUP BY 1,2
+ORDER BY 1 asc;
+
+-- 9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier 
+-- how many points would each customer have?
+SELECT
+	s.customer_id,
+	SUM(CASE
+		WHEN me.product_name = 'sushi' THEN 2*(me.price)  
+		ELSE me.price
+	     END) AS points
+FROM sales s
+LEFT JOIN menu me ON me.product_id = s.product_id 
+GROUP BY 1;
+ 
+ -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points 
+ -- on all items, not just sushi - how many points do customer A and B have at the end of January?
+ 
+WITH join_week AS
+(
+SELECT 
+	s.customer_id,
+    s.order_date,
+    me.product_name,
+    me.price,
+    join_date,
+    DATE_ADD(join_date, INTERVAL 5 DAY) as week_after_join
+FROM sales s 
+LEFT JOIN members m ON m.customer_id = s.customer_id
+JOIN menu me ON me.product_id = s.product_id
+)
+SELECT 
+	customer_id,
+    GROUP_CONCAT(product_name) AS ordered_items,
+    SUM(CASE 
+		WHEN order_date <= join_date and order_date >= week_after_join THEN 2*(price)
+        ELSE price
+	END) AS points 
+FROM join_week
+WHERE order_date < '2021-01-31'
+GROUP BY 1
+
